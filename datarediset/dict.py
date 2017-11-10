@@ -1,4 +1,5 @@
 from uuid import uuid4
+from weakref import finalize
 
 from redis import StrictRedis
 
@@ -11,10 +12,12 @@ class Dict:
                                       database, not both')
         if db is None and conn is None:
             self.conn = StrictRedis(db=0, **kwargs)
-        elif db is None and not conn is None:
+            self.temporary = True
+        elif db is None and conn is not None:
             self.conn = conn
         elif db is not None and conn is None:
             self.conn = StrictRedis(db=db, **kwargs)
+            self.temporary = True
         if name is None:
             self.name = uuid4()
         else:
@@ -71,3 +74,13 @@ class Dict:
 
     def __len__(self):
         return len(self.get_keys)
+
+    def __enter__(self):
+        if self._temporary:
+            return self
+        else:
+            raise RuntimeError('dict must not have a foreign connection in a\
+                               "with" statement.')
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            self.conn.delete(self.name)
