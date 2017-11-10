@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -17,4 +17,6 @@ setup(
     ],
     keywords='dataset dict redis',
     install_requires=['redis'],
+    packages=find_packages(),
+    entry_points={},
 )
