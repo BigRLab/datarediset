@@ -12,12 +12,12 @@ class Dict:
                                       database, not both')
         if db is None and conn is None:
             self.conn = StrictRedis(db=0, **kwargs)
-            self.temporary = True
+            self._temporary = True
         elif db is None and conn is not None:
             self.conn = conn
         elif db is not None and conn is None:
             self.conn = StrictRedis(db=db, **kwargs)
-            self.temporary = True
+            self._temporary = True
         if name is None:
             self.name = uuid4()
         else:
