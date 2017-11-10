@@ -58,7 +58,10 @@ class Dict:
             raise TypeError('key and value must be utf-8 strings')
 
     def __repr__(self):
-        return '<datarediset.Dict(conn={})>'.format(self.conn)
+        return '<datarediset.Dict(name={}, conn={})>'.format(
+            self.name,
+            self.conn,
+        )
 
     def __contains__(self, item):
         if isinstance(item, str):
